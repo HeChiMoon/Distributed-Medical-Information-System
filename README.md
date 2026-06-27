@@ -54,7 +54,11 @@ npm run build
 ## Demo APIs
 
 - Login: `POST http://localhost:9527/api/auth/login`
-- Gateway protected route: `GET http://localhost:9527/api/patients/modules`
+- Patient list: `GET http://localhost:9527/api/patients`
+- Patient create: `POST http://localhost:9527/api/patients`
+- Patient detail: `GET http://localhost:9527/api/patients/{id}`
+- Patient update: `PUT http://localhost:9527/api/patients/{id}`
+- Patient delete: `DELETE http://localhost:9527/api/patients/{id}`
 - Feign demo: `GET http://localhost:9527/api/appointments/demo/remote-patient/1`
 - Swagger UI example: `http://localhost:9001/swagger-ui.html`
 

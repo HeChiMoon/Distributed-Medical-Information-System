@@ -23,3 +23,11 @@ Phenomenon: Each service needs consistent validation and error responses.
 Analysis: Duplicating exception handlers in every service would make later changes noisy.
 
 Solution: Add shared error code, business exception, and validation exception handling in `dmis-common`, then scan `com.dmis` from each service application.
+
+## 4. Patient cache should not block core workflow
+
+Phenomenon: Patient details should be cached in Redis, but local development or demo environments may start MySQL before Redis.
+
+Analysis: Cache failures are infrastructure failures, while CRUD operations should still be testable and demonstrable with the database.
+
+Solution: Wrap Redis get, put, and evict operations in `PatientCache`; cache failures fall back to database behavior and do not interrupt the patient workflow.

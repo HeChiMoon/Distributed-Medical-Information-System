@@ -6,6 +6,17 @@ spring:
     name: patient-service
   config:
     import: optional:nacos:${spring.application.name}.yml
+  datasource:
+    url: jdbc:mysql://localhost:3306/dmis_patient?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: dmis
+    password: dmis123456
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
   data:
     redis:
       host: localhost
