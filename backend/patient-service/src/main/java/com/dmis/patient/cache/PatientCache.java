@@ -46,6 +46,14 @@ public class PatientCache {
         }
     }
 
+    public PatientCacheDemoResponse describeDetailCache(Long id) {
+        return new PatientCacheDemoResponse(
+                detailKey(id),
+                detailTtl.toMinutes(),
+                "cache-aside: query Redis first, load MySQL on miss, then write Redis with TTL"
+        );
+    }
+
     private String detailKey(Long id) {
         return "patient:detail:" + id;
     }

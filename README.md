@@ -16,6 +16,12 @@ A Spring Boot 3 + Spring Cloud + Vue 3 distributed medical information system de
 - `frontend`: Vue 3 admin console scaffold.
 - `infra`: MySQL, Redis, Nacos, and database initialization scripts.
 
+## Milestone Status
+
+- Milestone 1: base distributed framework, gateway, auth, Nacos/Redis/MySQL infrastructure.
+- Milestone 2: core business services and 68 business APIs.
+- Milestone 3: integration demo layer, dynamic config endpoint, Redis cache demo endpoint, frontend demo console, runbook, and 76 documented APIs.
+
 ## Local Startup
 
 1. Start infrastructure:
@@ -57,6 +63,7 @@ All gateway paths use `http://localhost:9527/api`.
 
 - Login: `POST /api/auth/login`
 - Patient create/list/detail/update/delete: `/api/patients`
+- Patient Redis cache demo: `GET /api/patients/{id}/cache-demo`
 - Department create: `POST /api/appointments/departments`
 - Doctor create: `POST /api/appointments/doctors`
 - Schedule create: `POST /api/schedules`
@@ -72,6 +79,7 @@ All gateway paths use `http://localhost:9527/api`.
 - Dictionary item CRUD: `/api/admin/dict-items`
 - Operation log create/query: `/api/admin/operation-logs`
 - Feign demo: `GET /api/appointments/demo/remote-patient/1`
+- Config center demo: `GET /api/config/patient/demo/config`
 
 ## API Documentation
 
@@ -88,6 +96,18 @@ http://localhost:9007/swagger-ui.html
 ```
 
 The consolidated API inventory is in `docs/api-progress.md`.
+
+## Demo Runbook
+
+Use `docs/demo-runbook.md` to demonstrate:
+
+- JWT login and gateway authentication.
+- Redis cache-aside behavior.
+- Nacos service registration and deregistration.
+- Feign remote calls between services.
+- Gateway access to business APIs.
+- Nacos config update through `/demo/config`.
+- Unit test results and Git push workflow.
 
 ## Remote Repository
 

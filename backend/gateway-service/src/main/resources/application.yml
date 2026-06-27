@@ -18,6 +18,48 @@ spring:
         locator:
           enabled: true
       routes:
+        - id: config-auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/config/auth/**
+          filters:
+            - StripPrefix=3
+        - id: config-patient-service
+          uri: lb://patient-service
+          predicates:
+            - Path=/api/config/patient/**
+          filters:
+            - StripPrefix=3
+        - id: config-appointment-service
+          uri: lb://appointment-service
+          predicates:
+            - Path=/api/config/appointment/**
+          filters:
+            - StripPrefix=3
+        - id: config-medical-record-service
+          uri: lb://medical-record-service
+          predicates:
+            - Path=/api/config/record/**
+          filters:
+            - StripPrefix=3
+        - id: config-pharmacy-service
+          uri: lb://pharmacy-service
+          predicates:
+            - Path=/api/config/pharmacy/**
+          filters:
+            - StripPrefix=3
+        - id: config-billing-service
+          uri: lb://billing-service
+          predicates:
+            - Path=/api/config/billing/**
+          filters:
+            - StripPrefix=3
+        - id: config-admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/api/config/admin/**
+          filters:
+            - StripPrefix=3
         - id: auth-service
           uri: lb://auth-service
           predicates:
@@ -65,4 +107,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,gateway
+        include: health,info,gateway,refresh

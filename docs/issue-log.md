@@ -79,3 +79,27 @@ Phenomenon: Dictionary and operation-log APIs are needed for demos, but they sho
 Analysis: Keeping dictionaries and logs in `admin-service` preserves service boundaries and lets business services stay focused.
 
 Solution: Add a dedicated `admin-service` slice with dictionary type/item CRUD and operation log query APIs.
+
+## 11. Config center changes need a visible runtime endpoint
+
+Phenomenon: Nacos config files existed, but there was no simple API that proved a runtime service had read the changed value.
+
+Analysis: A demo needs an observable endpoint that can be called before and after modifying Nacos config.
+
+Solution: Add shared `GET /demo/config` in `dmis-common`, bind `dmis.demo.config-message`, annotate it with `@RefreshScope`, expose actuator `refresh`, and route config demo paths through the gateway.
+
+## 12. Redis caching needs to be explainable during a demo
+
+Phenomenon: Patient detail already used Redis cache-aside, but the audience could not see which key or TTL was involved without reading code.
+
+Analysis: The demo needs a safe observability endpoint that reveals cache strategy without exposing sensitive patient data.
+
+Solution: Add `GET /patients/{id}/cache-demo` returning the Redis key, TTL, and cache-aside strategy.
+
+## 13. Frontend demo page had encoding corruption
+
+Phenomenon: The Vue dashboard text was garbled, which would distract from the system demo.
+
+Analysis: The frontend is not the milestone's core, but it still needs to communicate architecture and progress clearly.
+
+Solution: Rebuild the Vue page as a milestone-3 demo console covering API count, service registry, integration flow, and verification gates.

@@ -3,3 +3,5 @@ dmis:
     secret: dmis-demo-secret-key-for-local-development-only-2026
   auth:
     token-expire-seconds: 7200
+  demo:
+    config-message: auth service config from nacos

@@ -3,3 +3,5 @@ dmis:
     secret: dmis-demo-secret-key-for-local-development-only-2026
   gateway:
     auth-enabled: true
+  demo:
+    config-message: gateway service config from nacos

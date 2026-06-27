@@ -1,34 +1,54 @@
-# 系统模块与微服务架构
+# System Architecture
 
-## 微服务
+## Microservices
 
-| 服务 | 端口 | 职责 |
+| Service | Port | Responsibility |
 | --- | ---: | --- |
-| gateway-service | 9527 | 统一入口、路由转发、JWT 鉴权 |
-| auth-service | 9001 | 登录、JWT、用户权限预留 |
-| patient-service | 9002 | 患者档案、患者摘要、Redis 缓存预留 |
-| appointment-service | 9003 | 预约排班、远程调用患者服务 |
-| medical-record-service | 9004 | 电子病历、医嘱 |
-| pharmacy-service | 9005 | 药品、库存、发药 |
-| billing-service | 9006 | 账单、支付状态 |
-| admin-service | 9007 | 字典、配置、审计日志 |
+| gateway-service | 9527 | Unified API entry, route forwarding, JWT authentication |
+| auth-service | 9001 | Login authentication and JWT token issuing |
+| patient-service | 9002 | Patient profiles, patient summaries, Redis cache-aside demo |
+| appointment-service | 9003 | Departments, doctors, schedules, appointments, patient Feign lookup |
+| medical-record-service | 9004 | Electronic medical records and medical orders |
+| pharmacy-service | 9005 | Drug catalog, inventory inbound, inventory flows, dispensing |
+| billing-service | 9006 | Bills, bill items, payments, payment status transitions |
+| admin-service | 9007 | Dictionary management and operation logs |
 
-## 演示链路
+## Runtime Components
 
-- 登录认证: `POST http://localhost:9527/api/auth/login`
-- 网关鉴权: 登录后携带 `Authorization: Bearer <token>` 访问业务接口
-- 网关访问: `GET http://localhost:9527/api/patients/modules`
-- 远程调用: `GET http://localhost:9527/api/appointments/demo/remote-patient/1`
-- 注册中心: 观察 Nacos 服务列表中各服务上线和下线
-- 配置中心: 将 `infra/nacos/config/*.yml` 中的配置导入 Nacos，修改后观察服务配置变化
+- MySQL: one schema per business service.
+- Redis: patient detail cache-aside storage.
+- Nacos Discovery: service registration and discovery for gateway load-balanced routes and Feign calls.
+- Nacos Config: dynamic demo config through `dmis.demo.config-message`.
+- Gateway: public login endpoint plus protected business endpoints.
+- SpringDoc: Swagger UI per service.
 
-## 基础设施
+## Remote Call Chain
 
-- MySQL: `localhost:3306`
-- Redis: `localhost:6379`
-- Nacos: `http://localhost:8848/nacos`
+```mermaid
+flowchart LR
+  Gateway["API Gateway :9527"] --> Auth["auth-service"]
+  Gateway --> Patient["patient-service"]
+  Gateway --> Appointment["appointment-service"]
+  Gateway --> Record["medical-record-service"]
+  Gateway --> Pharmacy["pharmacy-service"]
+  Gateway --> Billing["billing-service"]
+  Appointment --> Patient
+  Record --> Patient
+  Record --> Appointment
+  Pharmacy --> Record
+  Billing --> Patient
+```
 
-启动命令：
+## Demo Links
+
+- Login: `POST http://localhost:9527/api/auth/login`
+- Gateway auth: call business APIs with `Authorization: Bearer <token>`
+- Redis cache demo: `GET http://localhost:9527/api/patients/{id}/cache-demo`
+- Remote call demo: `GET http://localhost:9527/api/appointments/demo/remote-patient/1`
+- Config center demo: `GET http://localhost:9527/api/config/patient/demo/config`
+- Nacos console: `http://localhost:8848/nacos`
+
+## Infrastructure Startup
 
 ```powershell
 docker compose up -d mysql redis nacos

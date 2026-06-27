@@ -2,17 +2,17 @@
 
 Target: at least 50 documented APIs.
 
-Current implemented API count: 68.
+Current implemented API count: 76.
 
 | Domain | Count | Notes |
 | --- | ---: | --- |
-| Auth | 2 | Login, module metadata |
-| Patient | 8 | CRUD, paging, summary, internal summary, Redis cache-aside detail |
-| Appointment | 15 | Departments, doctors, schedules, booking, cancellation, remote patient demo |
-| Medical Record | 10 | Medical records, medical orders, remote patient and appointment validation |
-| Pharmacy | 11 | Drug CRUD, inventory inbound/query, dispensing, medical order remote lookup |
-| Billing | 8 | Bill create/query/cancel, bill items, payment records |
-| Admin | 14 | Dictionary type CRUD, dictionary item CRUD, operation log create/query |
+| Auth | 3 | Login, module metadata, dynamic config demo |
+| Patient | 10 | CRUD, paging, summary, internal summary, Redis cache-aside detail, cache/config demos |
+| Appointment | 16 | Departments, doctors, schedules, booking, cancellation, remote patient demo, config demo |
+| Medical Record | 11 | Medical records, medical orders, remote patient and appointment validation, config demo |
+| Pharmacy | 12 | Drug CRUD, inventory inbound/query, dispensing, medical order remote lookup, config demo |
+| Billing | 9 | Bill create/query/cancel, bill items, payment records, config demo |
+| Admin | 15 | Dictionary type CRUD, dictionary item CRUD, operation log create/query, config demo |
 
 ## API Inventory
 
@@ -22,6 +22,7 @@ Current implemented API count: 68.
 | --- | --- | --- |
 | GET | `/auth/modules` | Auth service metadata |
 | POST | `/auth/login` | Login and issue JWT |
+| GET | `/demo/config` | Dynamic config center demo |
 
 ### Patient
 
@@ -34,7 +35,9 @@ Current implemented API count: 68.
 | PUT | `/patients/{id}` | Update patient |
 | DELETE | `/patients/{id}` | Logical delete patient |
 | GET | `/patients/{id}/summary` | Get patient summary |
+| GET | `/patients/{id}/cache-demo` | Show Redis cache key, TTL, and strategy |
 | GET | `/patients/internal/{id}/summary` | Internal summary for Feign |
+| GET | `/demo/config` | Dynamic config center demo |
 
 ### Appointment
 
@@ -55,6 +58,7 @@ Current implemented API count: 68.
 | GET | `/schedules/{id}` | Get schedule detail |
 | PUT | `/schedules/{id}` | Update schedule |
 | DELETE | `/schedules/{id}` | Delete schedule |
+| GET | `/demo/config` | Dynamic config center demo |
 
 ### Medical Record
 
@@ -70,6 +74,7 @@ Current implemented API count: 68.
 | GET | `/orders` | Page medical orders |
 | GET | `/orders/{id}` | Get medical order detail |
 | PUT | `/orders/{id}/stop` | Stop medical order |
+| GET | `/demo/config` | Dynamic config center demo |
 
 ### Pharmacy
 
@@ -86,6 +91,7 @@ Current implemented API count: 68.
 | POST | `/pharmacy/dispenses` | Dispense drug for an active medical order |
 | GET | `/pharmacy/dispenses` | Page dispense records |
 | GET | `/pharmacy/dispenses/{id}` | Get dispense detail |
+| GET | `/demo/config` | Dynamic config center demo |
 
 ### Billing
 
@@ -99,6 +105,7 @@ Current implemented API count: 68.
 | PUT | `/bills/{id}/cancel` | Cancel unpaid bill |
 | POST | `/bills/{id}/payments` | Pay bill |
 | GET | `/bills/{id}/payments` | List bill payments |
+| GET | `/demo/config` | Dynamic config center demo |
 
 ### Admin
 
@@ -118,3 +125,18 @@ Current implemented API count: 68.
 | POST | `/admin/operation-logs` | Create operation log |
 | GET | `/admin/operation-logs` | Page operation logs |
 | GET | `/admin/operation-logs/{id}` | Get operation log |
+| GET | `/demo/config` | Dynamic config center demo |
+
+## Gateway Demo Routes
+
+These routes demonstrate gateway + Nacos load-balanced access to dynamic config endpoints:
+
+| Gateway Path | Target |
+| --- | --- |
+| `/api/config/auth/demo/config` | `auth-service:/demo/config` |
+| `/api/config/patient/demo/config` | `patient-service:/demo/config` |
+| `/api/config/appointment/demo/config` | `appointment-service:/demo/config` |
+| `/api/config/record/demo/config` | `medical-record-service:/demo/config` |
+| `/api/config/pharmacy/demo/config` | `pharmacy-service:/demo/config` |
+| `/api/config/billing/demo/config` | `billing-service:/demo/config` |
+| `/api/config/admin/demo/config` | `admin-service:/demo/config` |

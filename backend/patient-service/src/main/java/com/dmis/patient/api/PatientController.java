@@ -4,6 +4,8 @@ import com.dmis.common.api.ApiResponse;
 import com.dmis.common.api.ModuleInfo;
 import com.dmis.common.api.PageResponse;
 import com.dmis.common.api.PatientSummary;
+import com.dmis.patient.cache.PatientCache;
+import com.dmis.patient.cache.PatientCacheDemoResponse;
 import com.dmis.patient.service.PatientService;
 import com.dmis.patient.web.PatientCreateRequest;
 import com.dmis.patient.web.PatientResponse;
@@ -27,9 +29,11 @@ import java.util.List;
 public class PatientController {
 
     private final PatientService patientService;
+    private final PatientCache patientCache;
 
-    public PatientController(PatientService patientService) {
+    public PatientController(PatientService patientService, PatientCache patientCache) {
         this.patientService = patientService;
+        this.patientCache = patientCache;
     }
 
     @GetMapping("/modules")
@@ -72,6 +76,11 @@ public class PatientController {
     public ApiResponse<PatientSummary> summary(@PathVariable Long id) {
         PatientResponse patient = patientService.getSummary(id);
         return ApiResponse.ok(new PatientSummary(patient.id(), patient.patientNo(), patient.name(), patient.phone()));
+    }
+
+    @GetMapping("/{id}/cache-demo")
+    public ApiResponse<PatientCacheDemoResponse> cacheDemo(@PathVariable Long id) {
+        return ApiResponse.ok(patientCache.describeDetailCache(id));
     }
 
     @GetMapping("/internal/{id}/summary")
