@@ -12,8 +12,8 @@ spring:
       port: 6379
   datasource:
     url: jdbc:mysql://localhost:3306/dmis_pharmacy?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: root
-    password: root
+    username: dmis
+    password: dmis123456
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

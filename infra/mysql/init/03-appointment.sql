@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS department_info (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by BIGINT NULL,
   updated_by BIGINT NULL,
-  deleted TINYINT NOT NULL DEFAULT 0,
+  deleted BIT(1) NOT NULL DEFAULT b'0',
   version INT NOT NULL DEFAULT 0
 );
 
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS doctor_info (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by BIGINT NULL,
   updated_by BIGINT NULL,
-  deleted TINYINT NOT NULL DEFAULT 0,
+  deleted BIT(1) NOT NULL DEFAULT b'0',
   version INT NOT NULL DEFAULT 0,
   KEY idx_doctor_dept (dept_id)
 );
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS doctor_schedule (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by BIGINT NULL,
   updated_by BIGINT NULL,
-  deleted TINYINT NOT NULL DEFAULT 0,
+  deleted BIT(1) NOT NULL DEFAULT b'0',
   version INT NOT NULL DEFAULT 0,
   UNIQUE KEY uk_doctor_schedule (doctor_id, schedule_date, time_slot)
 );
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS appointment_record (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by BIGINT NULL,
   updated_by BIGINT NULL,
-  deleted TINYINT NOT NULL DEFAULT 0,
+  deleted BIT(1) NOT NULL DEFAULT b'0',
   version INT NOT NULL DEFAULT 0,
   KEY idx_appointment_patient (patient_id),
   KEY idx_appointment_doctor_date (doctor_id, appointment_date)

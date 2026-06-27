@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS billing_record (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by BIGINT NULL,
   updated_by BIGINT NULL,
-  deleted TINYINT NOT NULL DEFAULT 0,
+  deleted BIT(1) NOT NULL DEFAULT b'0',
   version INT NOT NULL DEFAULT 0,
   KEY idx_bill_patient (patient_id)
 );

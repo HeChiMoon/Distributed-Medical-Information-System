@@ -1,8 +1,10 @@
 package com.dmis.patient.cache;
 
 import com.dmis.patient.web.PatientResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -11,29 +13,36 @@ import java.util.Optional;
 @Component
 public class PatientCache {
 
-    private final RedisTemplate<String, PatientResponse> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
+    private final ObjectMapper objectMapper;
     private final Duration detailTtl;
 
     public PatientCache(
-            RedisTemplate<String, PatientResponse> redisTemplate,
+            StringRedisTemplate redisTemplate,
+            ObjectMapper objectMapper,
             @Value("${dmis.cache.patient-detail-ttl-minutes:30}") long detailTtlMinutes
     ) {
         this.redisTemplate = redisTemplate;
+        this.objectMapper = objectMapper;
         this.detailTtl = Duration.ofMinutes(detailTtlMinutes);
     }
 
     public Optional<PatientResponse> getDetail(Long id) {
         try {
-            return Optional.ofNullable(redisTemplate.opsForValue().get(detailKey(id)));
-        } catch (RuntimeException exception) {
+            String json = redisTemplate.opsForValue().get(detailKey(id));
+            if (json == null || json.isBlank()) {
+                return Optional.empty();
+            }
+            return Optional.of(objectMapper.readValue(json, PatientResponse.class));
+        } catch (RuntimeException | JsonProcessingException exception) {
             return Optional.empty();
         }
     }
 
     public void putDetail(Long id, PatientResponse response) {
         try {
-            redisTemplate.opsForValue().set(detailKey(id), response, detailTtl);
-        } catch (RuntimeException ignored) {
+            redisTemplate.opsForValue().set(detailKey(id), objectMapper.writeValueAsString(response), detailTtl);
+        } catch (RuntimeException | JsonProcessingException ignored) {
             // Cache failures should not break the clinical workflow demo path.
         }
     }

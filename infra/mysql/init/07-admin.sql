@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS sys_dict_type (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by BIGINT NULL,
   updated_by BIGINT NULL,
-  deleted TINYINT NOT NULL DEFAULT 0,
+  deleted BIT(1) NOT NULL DEFAULT b'0',
   version INT NOT NULL DEFAULT 0
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS sys_dict_item (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by BIGINT NULL,
   updated_by BIGINT NULL,
-  deleted TINYINT NOT NULL DEFAULT 0,
+  deleted BIT(1) NOT NULL DEFAULT b'0',
   version INT NOT NULL DEFAULT 0,
   UNIQUE KEY uk_dict_item (dict_type_id, item_code)
 );

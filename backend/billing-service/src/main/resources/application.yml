@@ -8,8 +8,8 @@ spring:
     import: optional:nacos:${spring.application.name}.yml
   datasource:
     url: jdbc:mysql://localhost:3306/dmis_billing?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: root
-    password: root
+    username: dmis
+    password: dmis123456
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
