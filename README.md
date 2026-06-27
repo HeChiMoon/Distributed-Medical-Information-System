@@ -59,6 +59,11 @@ npm run build
 - Patient detail: `GET http://localhost:9527/api/patients/{id}`
 - Patient update: `PUT http://localhost:9527/api/patients/{id}`
 - Patient delete: `DELETE http://localhost:9527/api/patients/{id}`
+- Department create: `POST http://localhost:9527/api/appointments/departments`
+- Doctor create: `POST http://localhost:9527/api/appointments/doctors`
+- Schedule create: `POST http://localhost:9527/api/schedules`
+- Appointment book: `POST http://localhost:9527/api/appointments`
+- Appointment cancel: `PUT http://localhost:9527/api/appointments/{id}/cancel`
 - Feign demo: `GET http://localhost:9527/api/appointments/demo/remote-patient/1`
 - Swagger UI example: `http://localhost:9001/swagger-ui.html`
 

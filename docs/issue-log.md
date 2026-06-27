@@ -31,3 +31,19 @@ Phenomenon: Patient details should be cached in Redis, but local development or 
 Analysis: Cache failures are infrastructure failures, while CRUD operations should still be testable and demonstrable with the database.
 
 Solution: Wrap Redis get, put, and evict operations in `PatientCache`; cache failures fall back to database behavior and do not interrupt the patient workflow.
+
+## 5. Appointment booking needs a business remote call
+
+Phenomenon: A remote call demo alone does not prove that services exchange data during real business behavior.
+
+Analysis: Appointment booking naturally depends on patient existence and patient summary lookup.
+
+Solution: `appointment-service` calls `patient-service` through Feign before occupying schedule quota and creating an appointment record.
+
+## 6. Schedule quota must stay consistent during cancellation
+
+Phenomenon: Cancelling an appointment without releasing quota would make doctors appear fully booked too early.
+
+Analysis: Appointment status and schedule `currentNumber` need to be updated together in one service transaction.
+
+Solution: `AppointmentService.cancel` marks the appointment as `CANCELLED`, decrements the schedule quota with a zero floor, and saves both records in one transactional method.

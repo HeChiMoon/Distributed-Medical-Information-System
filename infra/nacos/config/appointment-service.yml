@@ -1,0 +1,5 @@
+dmis:
+  appointment:
+    default-source: WEB
+  demo:
+    config-message: appointment service config from nacos
