@@ -4,6 +4,16 @@ This runbook maps the original project requirements to concrete demo steps.
 
 ## 1. Start Infrastructure
 
+Recommended daily startup:
+
+```powershell
+.\scripts\start-dev.ps1
+```
+
+The script starts infrastructure, imports Nacos config, packages and starts backend services, and starts the Vue frontend.
+
+Manual infrastructure startup:
+
 ```powershell
 docker compose up -d mysql redis nacos
 ```
@@ -21,6 +31,8 @@ http://localhost:8848/nacos
 ```
 
 ## 2. Start Services
+
+If `scripts/start-dev.ps1` was used, services are already started and logs are written to `logs/dev/`.
 
 Start each Spring Boot service:
 
@@ -175,3 +187,26 @@ Run gateway smoke demo after services are started:
 ```powershell
 .\scripts\demo-api.ps1
 ```
+
+## 12. Stop Everything
+
+Recommended daily shutdown:
+
+```powershell
+.\scripts\stop-dev.ps1
+```
+
+If a local MySQL process is occupying `3306` and is only used for this project:
+
+```powershell
+.\scripts\stop-dev.ps1 -StopLocalMySql
+```
+
+## 13. Demo Video
+
+The required final delivery artifact is a demo video. Use `docs/demo-video-script.md` as the recording script. The video should explain:
+
+- Technology stack: Vue 3, Spring Boot 3, Spring Cloud Gateway, Nacos, Redis, MySQL, OpenFeign, Swagger, Maven tests.
+- Architecture: frontend, gateway, microservices, service discovery, config center, cache, database-per-service.
+- Functions: login, patient management, appointment scheduling, medical records, medical orders, pharmacy inventory, billing, search center, integration checks.
+- Verification: Swagger API docs, unit test result, frontend build result, Git commit and remote repository.
