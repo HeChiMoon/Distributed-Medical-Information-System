@@ -1,0 +1,5 @@
+dmis:
+  billing:
+    allow-partial-payment: true
+  demo:
+    config-message: billing service config from nacos

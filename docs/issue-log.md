@@ -55,3 +55,27 @@ Phenomenon: A medical record can reference both a patient and an appointment, bu
 Analysis: Creating a record from mismatched data would break later billing and pharmacy flows.
 
 Solution: `medical-record-service` calls `patient-service` to verify the patient and calls `appointment-service` to verify appointment ownership before saving the record.
+
+## 8. Pharmacy dispensing must not create negative inventory
+
+Phenomenon: Dispensing directly from an order can overdraw stock if inventory is not checked first.
+
+Analysis: Pharmacy inventory is owned by `pharmacy-service`, while the prescription/order is owned by `medical-record-service`.
+
+Solution: `pharmacy-service` calls `medical-record-service` to verify an active order, loads the earliest-expiring inventory batch, rejects insufficient stock, deducts quantity in one transaction, and writes an inventory flow.
+
+## 9. Billing payment status needs deterministic transitions
+
+Phenomenon: A bill can be paid in multiple payments, so a single boolean paid flag is not enough.
+
+Analysis: Demo billing needs to show unpaid, partially paid, and fully paid states without allowing over-payment or payment against cancelled bills.
+
+Solution: `BillingService.pay` records each payment, updates `paidAmount`, and derives `UNPAID`, `PARTIAL`, or `PAID` from the accumulated amount.
+
+## 10. Admin data is shared configuration, not business ownership
+
+Phenomenon: Dictionary and operation-log APIs are needed for demos, but they should not leak into patient, appointment, pharmacy, or billing services.
+
+Analysis: Keeping dictionaries and logs in `admin-service` preserves service boundaries and lets business services stay focused.
+
+Solution: Add a dedicated `admin-service` slice with dictionary type/item CRUD and operation log query APIs.

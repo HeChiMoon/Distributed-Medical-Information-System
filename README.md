@@ -1,30 +1,30 @@
 # Distributed Medical Information System
 
-基于 Spring Boot 3 + Spring Cloud + Vue 3 的分布式医疗信息化系统。
+A Spring Boot 3 + Spring Cloud + Vue 3 distributed medical information system demo.
 
 ## Current Scope
 
-- `backend/dmis-common`: 统一响应、分页模型、错误码、业务异常、参数校验异常处理、审计字段
-- `backend/gateway-service`: API 网关、路由转发、JWT 鉴权过滤器
-- `backend/auth-service`: 登录认证基础接口，返回 JWT
-- `backend/patient-service`: 患者服务基础接口，含内部远程调用演示接口
-- `backend/appointment-service`: 预约服务基础接口，含 Feign 调用患者服务示例
-- `backend/medical-record-service`: 电子病历与医嘱服务入口
-- `backend/pharmacy-service`: 药房与库存服务入口
-- `backend/billing-service`: 电子账单服务入口
-- `backend/admin-service`: 系统管理服务入口
-- `frontend`: Vue 3 医疗后台管理界面骨架
-- `infra`: MySQL、Redis、Nacos 与数据库初始化脚本
+- `backend/dmis-common`: shared API response, paging model, error codes, business exception handling, validation handling, and common DTOs.
+- `backend/gateway-service`: API gateway, service routes, and JWT authentication filter.
+- `backend/auth-service`: login API and JWT token generation.
+- `backend/patient-service`: patient CRUD, patient summaries, and Redis cache-aside detail lookup.
+- `backend/appointment-service`: departments, doctors, schedules, appointment booking/cancellation, and Feign patient lookup.
+- `backend/medical-record-service`: electronic medical records and medical order management.
+- `backend/pharmacy-service`: drug catalog, inventory inbound, inventory flows, and dispensing with remote medical order validation.
+- `backend/billing-service`: bill creation, bill items, payment records, and payment status transitions.
+- `backend/admin-service`: dictionary type/item management and operation logs.
+- `frontend`: Vue 3 admin console scaffold.
+- `infra`: MySQL, Redis, Nacos, and database initialization scripts.
 
 ## Local Startup
 
-1. 启动基础设施：
+1. Start infrastructure:
 
 ```powershell
 docker compose up -d mysql redis nacos
 ```
 
-2. 启动后端服务：
+2. Start backend services:
 
 - `gateway-service`: `9527`
 - `auth-service`: `9001`
@@ -35,7 +35,7 @@ docker compose up -d mysql redis nacos
 - `billing-service`: `9006`
 - `admin-service`: `9007`
 
-3. 启动前端：
+3. Start frontend:
 
 ```powershell
 cd frontend
@@ -51,24 +51,43 @@ cd frontend
 npm run build
 ```
 
-## Demo APIs
+## Demo APIs Through Gateway
 
-- Login: `POST http://localhost:9527/api/auth/login`
-- Patient list: `GET http://localhost:9527/api/patients`
-- Patient create: `POST http://localhost:9527/api/patients`
-- Patient detail: `GET http://localhost:9527/api/patients/{id}`
-- Patient update: `PUT http://localhost:9527/api/patients/{id}`
-- Patient delete: `DELETE http://localhost:9527/api/patients/{id}`
-- Department create: `POST http://localhost:9527/api/appointments/departments`
-- Doctor create: `POST http://localhost:9527/api/appointments/doctors`
-- Schedule create: `POST http://localhost:9527/api/schedules`
-- Appointment book: `POST http://localhost:9527/api/appointments`
-- Appointment cancel: `PUT http://localhost:9527/api/appointments/{id}/cancel`
-- Medical record create: `POST http://localhost:9527/api/records`
-- Medical order create: `POST http://localhost:9527/api/orders`
-- Medical order stop: `PUT http://localhost:9527/api/orders/{id}/stop`
-- Feign demo: `GET http://localhost:9527/api/appointments/demo/remote-patient/1`
-- Swagger UI example: `http://localhost:9001/swagger-ui.html`
+All gateway paths use `http://localhost:9527/api`.
+
+- Login: `POST /api/auth/login`
+- Patient create/list/detail/update/delete: `/api/patients`
+- Department create: `POST /api/appointments/departments`
+- Doctor create: `POST /api/appointments/doctors`
+- Schedule create: `POST /api/schedules`
+- Appointment book/cancel: `/api/appointments`
+- Medical record create/list/detail/update/delete: `/api/records`
+- Medical order create/list/detail/stop: `/api/orders`
+- Drug create/list/detail/update/delete: `/api/pharmacy/drugs`
+- Inventory inbound/query: `/api/pharmacy/inventory/inbound`, `/api/pharmacy/inventory`
+- Dispense create/list/detail: `/api/pharmacy/dispenses`
+- Bill create/list/detail/cancel: `/api/bills`
+- Bill payment create/list: `/api/bills/{id}/payments`
+- Dictionary type CRUD: `/api/admin/dict-types`
+- Dictionary item CRUD: `/api/admin/dict-items`
+- Operation log create/query: `/api/admin/operation-logs`
+- Feign demo: `GET /api/appointments/demo/remote-patient/1`
+
+## API Documentation
+
+Each service exposes SpringDoc Swagger UI:
+
+```text
+http://localhost:9001/swagger-ui.html
+http://localhost:9002/swagger-ui.html
+http://localhost:9003/swagger-ui.html
+http://localhost:9004/swagger-ui.html
+http://localhost:9005/swagger-ui.html
+http://localhost:9006/swagger-ui.html
+http://localhost:9007/swagger-ui.html
+```
+
+The consolidated API inventory is in `docs/api-progress.md`.
 
 ## Remote Repository
 

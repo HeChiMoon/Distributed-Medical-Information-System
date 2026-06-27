@@ -1,0 +1,5 @@
+dmis:
+  pharmacy:
+    stock-warning-enabled: true
+  demo:
+    config-message: pharmacy service config from nacos

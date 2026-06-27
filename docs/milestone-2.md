@@ -1,112 +1,120 @@
 # Milestone 2 Progress
 
-## Current Slice: Patient Service
+Milestone 2 status: complete.
 
-`patient-service` has moved from demo endpoints to a real CRUD service slice.
+Goal: implement the core business services for patient management, appointment scheduling, medical records, medical orders, pharmacy inventory/dispensing, billing/payment, and admin dictionaries/logs.
+
+## Completed Slices
+
+### Patient Service
 
 Implemented capabilities:
 
-- Create patient profile.
-- Page patient profiles by optional name keyword.
-- Get patient detail with Redis cache-aside lookup.
-- Update patient profile and evict Redis detail cache.
-- Logical delete patient profile and evict Redis detail cache.
-- Get patient summary for internal Feign calls.
+- Patient create, page, detail, update, and logical delete.
+- Patient summary APIs for external display and internal Feign calls.
+- Redis cache-aside for patient detail query, with eviction on update/delete.
 - MySQL persistence through Spring Data JPA.
-- Service-level unit tests covering create, cache hit, update eviction, delete, and paging.
+- Service-level unit tests for create, cache hit, update eviction, delete, and paging.
 
-## Patient APIs
+### Appointment Service
 
-| Method | Path | Description |
-| --- | --- | --- |
-| GET | `/patients/modules` | Patient service capability metadata |
-| POST | `/patients` | Create patient |
-| GET | `/patients` | Page patients |
-| GET | `/patients/{id}` | Get patient detail |
-| PUT | `/patients/{id}` | Update patient |
-| DELETE | `/patients/{id}` | Logical delete patient |
-| GET | `/patients/{id}/summary` | Get patient summary |
-| GET | `/patients/internal/{id}/summary` | Internal patient summary for Feign |
+Implemented capabilities:
 
-Gateway paths use the `/api` prefix, for example:
+- Department and doctor creation/query.
+- Schedule creation, query, detail, update, and delete.
+- Appointment booking with patient validation through Feign.
+- Full-schedule rejection.
+- Appointment cancellation with schedule quota release.
+- Service-level unit tests for schedule creation, booking, full schedule rejection, and cancellation.
+
+### Medical Record Service
+
+Implemented capabilities:
+
+- Medical record create, page, detail, update, and logical delete.
+- Medical order create, page, detail, and stop.
+- Patient validation through Feign before creating a record.
+- Appointment ownership validation through Feign when a record references an appointment.
+- Order ownership copied from record to keep patient/doctor data consistent.
+- Service-level unit tests for record creation, appointment mismatch rejection, order creation, and order stop.
+
+### Pharmacy Service
+
+Implemented capabilities:
+
+- Drug create, page, detail, update, and logical delete.
+- Inventory inbound with inventory flow records.
+- Inventory query by drug.
+- Drug dispensing for active medical orders.
+- Remote medical order lookup through Feign to `medical-record-service`.
+- Insufficient-stock protection.
+- Service-level unit tests for drug creation, inbound flow, insufficient stock rejection, and successful dispensing.
+
+### Billing Service
+
+Implemented capabilities:
+
+- Bill creation with line items.
+- Bill paging/detail and bill item query.
+- Bill cancellation when unpaid.
+- Payment record creation.
+- Payment status transitions: `UNPAID`, `PARTIAL`, `PAID`.
+- Cancelled bill payment rejection and over-payment protection.
+- Patient validation through Feign to `patient-service`.
+- Service-level unit tests for total calculation, partial payment, full payment, and cancelled bill rejection.
+
+### Admin Service
+
+Implemented capabilities:
+
+- Dictionary type create, page, detail, update, and logical delete.
+- Dictionary item create, page, detail, update, and logical delete.
+- Operation log create, page, and detail query.
+- Service-level unit tests for dictionary type creation, dictionary item creation, and operation log creation.
+
+## Remote Call Chain
+
+The current milestone includes real service-to-service data exchange:
+
+- `appointment-service` -> `patient-service`: verify patient summary before booking.
+- `medical-record-service` -> `patient-service`: verify patient before creating a record.
+- `medical-record-service` -> `appointment-service`: verify appointment ownership.
+- `pharmacy-service` -> `medical-record-service`: verify active medical order before dispensing.
+- `billing-service` -> `patient-service`: verify patient before bill creation.
+
+## Gateway Demo Paths
+
+Gateway paths use the `/api` prefix:
 
 ```text
-GET http://localhost:9527/api/patients
+POST http://localhost:9527/api/patients
+POST http://localhost:9527/api/appointments
+POST http://localhost:9527/api/records
+POST http://localhost:9527/api/orders
+POST http://localhost:9527/api/pharmacy/drugs
+POST http://localhost:9527/api/pharmacy/inventory/inbound
+POST http://localhost:9527/api/pharmacy/dispenses
+POST http://localhost:9527/api/bills
+POST http://localhost:9527/api/bills/{id}/payments
+POST http://localhost:9527/api/admin/dict-types
+POST http://localhost:9527/api/admin/operation-logs
 ```
+
+## API Count
+
+Milestone 2 implemented API count: 68.
+
+The detailed inventory is maintained in `docs/api-progress.md`.
 
 ## Verification
 
 ```powershell
-mvn -pl backend/patient-service -am test
+mvn -pl backend/pharmacy-service -am test
+mvn -pl backend/billing-service -am test
+mvn -pl backend/admin-service -am test
 mvn test
 ```
 
-## Next Slice
+Latest verification result:
 
-Recommended next service after medical records: `pharmacy-service`.
-
-Reason: pharmacy dispensing naturally consumes active medical orders and verifies the medication workflow after diagnosis.
-
-## Completed Slice: Appointment Service
-
-`appointment-service` now supports appointment scheduling and the first real business-level remote call to `patient-service`.
-
-Implemented capabilities:
-
-- Create and page departments.
-- Create and page doctors.
-- Create, page, detail, update, and delete schedules.
-- Book appointments by validating patient summary through Feign.
-- Reject full schedules.
-- Cancel appointments and release schedule quota.
-- MySQL persistence through Spring Data JPA.
-- Service-level unit tests covering schedule creation, booking, full schedule rejection, and cancellation.
-
-## Appointment APIs
-
-| Method | Path | Description |
-| --- | --- | --- |
-| GET | `/appointments/modules` | Appointment service capability metadata |
-| GET | `/appointments/demo/remote-patient/{patientId}` | Feign patient summary demo |
-| POST | `/appointments/departments` | Create department |
-| GET | `/appointments/departments` | Page departments |
-| POST | `/appointments/doctors` | Create doctor |
-| GET | `/appointments/doctors` | Page doctors |
-| POST | `/appointments` | Book appointment |
-| GET | `/appointments` | Page appointments |
-| GET | `/appointments/{id}` | Get appointment detail |
-| PUT | `/appointments/{id}/cancel` | Cancel appointment |
-| POST | `/schedules` | Create schedule |
-| GET | `/schedules` | Page schedules |
-| GET | `/schedules/{id}` | Get schedule detail |
-| PUT | `/schedules/{id}` | Update schedule |
-| DELETE | `/schedules/{id}` | Delete schedule |
-
-## Completed Slice: Medical Record Service
-
-`medical-record-service` now supports outpatient medical records and medical orders.
-
-Implemented capabilities:
-
-- Create, page, detail, update, and delete medical records.
-- Create, page, detail, and stop medical orders.
-- Validate patient summary through Feign before creating a record.
-- Validate appointment ownership through Feign when a record references an appointment.
-- Copy patient and doctor ownership from record to order.
-- MySQL persistence through Spring Data JPA.
-- Service-level unit tests covering record creation, appointment mismatch rejection, order creation, and order stop.
-
-## Medical Record APIs
-
-| Method | Path | Description |
-| --- | --- | --- |
-| GET | `/records/modules` | Medical record service capability metadata |
-| POST | `/records` | Create medical record |
-| GET | `/records` | Page medical records |
-| GET | `/records/{id}` | Get medical record detail |
-| PUT | `/records/{id}` | Update medical record |
-| DELETE | `/records/{id}` | Delete medical record |
-| POST | `/orders` | Create medical order |
-| GET | `/orders` | Page medical orders |
-| GET | `/orders/{id}` | Get medical order detail |
-| PUT | `/orders/{id}/stop` | Stop medical order |
+- `mvn test`: success across 10 Maven modules.

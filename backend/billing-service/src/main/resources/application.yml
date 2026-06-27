@@ -6,6 +6,18 @@ spring:
     name: billing-service
   config:
     import: optional:nacos:${spring.application.name}.yml
+  datasource:
+    url: jdbc:mysql://localhost:3306/dmis_billing?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
   cloud:
     nacos:
       server-addr: localhost:8848

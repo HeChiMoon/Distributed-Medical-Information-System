@@ -1,0 +1,5 @@
+dmis:
+  admin:
+    operation-log-enabled: true
+  demo:
+    config-message: admin service config from nacos
