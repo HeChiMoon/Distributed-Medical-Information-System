@@ -1,0 +1,16 @@
+CREATE DATABASE IF NOT EXISTS dmis_auth DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS dmis_patient DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS dmis_appointment DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS dmis_record DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS dmis_pharmacy DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS dmis_billing DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS dmis_admin DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+GRANT ALL PRIVILEGES ON dmis_auth.* TO 'dmis'@'%';
+GRANT ALL PRIVILEGES ON dmis_patient.* TO 'dmis'@'%';
+GRANT ALL PRIVILEGES ON dmis_appointment.* TO 'dmis'@'%';
+GRANT ALL PRIVILEGES ON dmis_record.* TO 'dmis'@'%';
+GRANT ALL PRIVILEGES ON dmis_pharmacy.* TO 'dmis'@'%';
+GRANT ALL PRIVILEGES ON dmis_billing.* TO 'dmis'@'%';
+GRANT ALL PRIVILEGES ON dmis_admin.* TO 'dmis'@'%';
+FLUSH PRIVILEGES;

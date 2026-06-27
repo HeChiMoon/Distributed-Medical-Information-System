@@ -1,0 +1,5 @@
+dmis:
+  cache:
+    patient-detail-ttl-minutes: 30
+  demo:
+    config-message: patient service config from nacos

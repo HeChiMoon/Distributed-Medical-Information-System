@@ -1,0 +1,29 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: patient-service
+  config:
+    import: optional:nacos:${spring.application.name}.yml
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace:
+      config:
+        file-extension: yml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

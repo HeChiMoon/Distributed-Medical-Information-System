@@ -1,0 +1,47 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: dmis-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: dmis_root
+      MYSQL_USER: dmis
+      MYSQL_PASSWORD: dmis123456
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - dmis_mysql_data:/var/lib/mysql
+      - ./infra/mysql/init:/docker-entrypoint-initdb.d
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  redis:
+    image: redis:7.2
+    container_name: dmis-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - dmis_redis_data:/data
+
+  nacos:
+    image: nacos/nacos-server:v2.3.2
+    container_name: dmis-nacos
+    restart: unless-stopped
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: hostname
+      TZ: Asia/Shanghai
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    volumes:
+      - dmis_nacos_data:/home/nacos/data
+
+volumes:
+  dmis_mysql_data:
+  dmis_redis_data:
+  dmis_nacos_data:

@@ -1,0 +1,5 @@
+dmis:
+  jwt:
+    secret: dmis-demo-secret-key-for-local-development-only-2026
+  gateway:
+    auth-enabled: true

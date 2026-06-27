@@ -1,0 +1,71 @@
+USE dmis_auth;
+
+CREATE TABLE IF NOT EXISTS sys_user (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(64) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  real_name VARCHAR(64) NOT NULL,
+  phone VARCHAR(32),
+  email VARCHAR(128),
+  status VARCHAR(20) NOT NULL DEFAULT 'ENABLED',
+  last_login_time DATETIME NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS sys_role (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  role_code VARCHAR(64) NOT NULL UNIQUE,
+  role_name VARCHAR(64) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'ENABLED',
+  remark VARCHAR(255),
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS sys_permission (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  permission_code VARCHAR(128) NOT NULL UNIQUE,
+  permission_name VARCHAR(128) NOT NULL,
+  permission_type VARCHAR(32) NOT NULL,
+  path VARCHAR(255),
+  method VARCHAR(16),
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS sys_user_role (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  role_id BIGINT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_user_role (user_id, role_id)
+);
+
+CREATE TABLE IF NOT EXISTS sys_role_permission (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  role_id BIGINT NOT NULL,
+  permission_id BIGINT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_role_permission (role_id, permission_id)
+);
+
+INSERT INTO sys_user (username, password, real_name, phone, email)
+VALUES ('admin', '{noop}admin123', 'System Admin', '13800000000', 'admin@dmis.local')
+ON DUPLICATE KEY UPDATE real_name = VALUES(real_name);
+
+INSERT INTO sys_role (role_code, role_name)
+VALUES ('ADMIN', 'Administrator'), ('DOCTOR', 'Doctor')
+ON DUPLICATE KEY UPDATE role_name = VALUES(role_name);

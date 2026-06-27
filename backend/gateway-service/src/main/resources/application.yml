@@ -1,0 +1,68 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: gateway-service
+  config:
+    import: optional:nacos:${spring.application.name}.yml
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace:
+      config:
+        file-extension: yml
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=1
+        - id: patient-service
+          uri: lb://patient-service
+          predicates:
+            - Path=/api/patients/**
+          filters:
+            - StripPrefix=1
+        - id: appointment-service
+          uri: lb://appointment-service
+          predicates:
+            - Path=/api/appointments/**,/api/schedules/**
+          filters:
+            - StripPrefix=1
+        - id: medical-record-service
+          uri: lb://medical-record-service
+          predicates:
+            - Path=/api/records/**,/api/orders/**
+          filters:
+            - StripPrefix=1
+        - id: pharmacy-service
+          uri: lb://pharmacy-service
+          predicates:
+            - Path=/api/drugs/**,/api/pharmacy/**
+          filters:
+            - StripPrefix=1
+        - id: billing-service
+          uri: lb://billing-service
+          predicates:
+            - Path=/api/bills/**
+          filters:
+            - StripPrefix=1
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/api/admin/**
+          filters:
+            - StripPrefix=1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway

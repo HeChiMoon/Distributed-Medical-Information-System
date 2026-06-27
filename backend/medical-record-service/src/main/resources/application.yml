@@ -1,0 +1,25 @@
+server:
+  port: 9004
+
+spring:
+  application:
+    name: medical-record-service
+  config:
+    import: optional:nacos:${spring.application.name}.yml
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace:
+      config:
+        file-extension: yml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

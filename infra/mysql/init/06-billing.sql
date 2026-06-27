@@ -1,0 +1,45 @@
+USE dmis_billing;
+
+CREATE TABLE IF NOT EXISTS billing_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  bill_no VARCHAR(64) NOT NULL UNIQUE,
+  patient_id BIGINT NOT NULL,
+  appointment_id BIGINT,
+  record_id BIGINT,
+  total_amount DECIMAL(12, 2) NOT NULL DEFAULT 0,
+  paid_amount DECIMAL(12, 2) NOT NULL DEFAULT 0,
+  bill_status VARCHAR(20) NOT NULL DEFAULT 'VALID',
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'UNPAID',
+  billing_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0,
+  KEY idx_bill_patient (patient_id)
+);
+
+CREATE TABLE IF NOT EXISTS billing_item (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  bill_id BIGINT NOT NULL,
+  item_type VARCHAR(32) NOT NULL,
+  item_name VARCHAR(128) NOT NULL,
+  unit_price DECIMAL(12, 2) NOT NULL,
+  quantity INT NOT NULL,
+  amount DECIMAL(12, 2) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_bill_item_bill (bill_id)
+);
+
+CREATE TABLE IF NOT EXISTS payment_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  bill_id BIGINT NOT NULL,
+  payment_no VARCHAR(64) NOT NULL UNIQUE,
+  payment_method VARCHAR(32) NOT NULL,
+  payment_amount DECIMAL(12, 2) NOT NULL,
+  payment_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'SUCCESS',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_payment_bill (bill_id)
+);

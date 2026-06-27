@@ -1,0 +1,70 @@
+USE dmis_appointment;
+
+CREATE TABLE IF NOT EXISTS department_info (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  dept_code VARCHAR(64) NOT NULL UNIQUE,
+  dept_name VARCHAR(128) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'ENABLED',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS doctor_info (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  doctor_no VARCHAR(64) NOT NULL UNIQUE,
+  doctor_name VARCHAR(64) NOT NULL,
+  dept_id BIGINT NOT NULL,
+  title VARCHAR(64),
+  phone VARCHAR(32),
+  status VARCHAR(20) NOT NULL DEFAULT 'ENABLED',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0,
+  KEY idx_doctor_dept (dept_id)
+);
+
+CREATE TABLE IF NOT EXISTS doctor_schedule (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  doctor_id BIGINT NOT NULL,
+  dept_id BIGINT NOT NULL,
+  schedule_date DATE NOT NULL,
+  time_slot VARCHAR(32) NOT NULL,
+  max_number INT NOT NULL,
+  current_number INT NOT NULL DEFAULT 0,
+  status VARCHAR(20) NOT NULL DEFAULT 'OPEN',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_doctor_schedule (doctor_id, schedule_date, time_slot)
+);
+
+CREATE TABLE IF NOT EXISTS appointment_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  appointment_no VARCHAR(64) NOT NULL UNIQUE,
+  patient_id BIGINT NOT NULL,
+  doctor_id BIGINT NOT NULL,
+  dept_id BIGINT NOT NULL,
+  schedule_id BIGINT NOT NULL,
+  appointment_date DATE NOT NULL,
+  time_slot VARCHAR(32) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  source VARCHAR(32) NOT NULL DEFAULT 'WEB',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0,
+  KEY idx_appointment_patient (patient_id),
+  KEY idx_appointment_doctor_date (doctor_id, appointment_date)
+);

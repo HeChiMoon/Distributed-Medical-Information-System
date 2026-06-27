@@ -1,0 +1,53 @@
+USE dmis_patient;
+
+CREATE TABLE IF NOT EXISTS patient_info (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  patient_no VARCHAR(64) NOT NULL UNIQUE,
+  name VARCHAR(64) NOT NULL,
+  gender VARCHAR(16) NOT NULL,
+  birthday DATE,
+  id_card VARCHAR(32) UNIQUE,
+  phone VARCHAR(32),
+  address VARCHAR(255),
+  blood_type VARCHAR(16),
+  allergy_history VARCHAR(500),
+  medical_history VARCHAR(500),
+  status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS patient_contact (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  patient_id BIGINT NOT NULL,
+  contact_name VARCHAR(64) NOT NULL,
+  relationship VARCHAR(32),
+  contact_phone VARCHAR(32),
+  is_primary TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0,
+  KEY idx_contact_patient (patient_id)
+);
+
+CREATE TABLE IF NOT EXISTS patient_visit_summary (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  patient_id BIGINT NOT NULL UNIQUE,
+  last_visit_time DATETIME,
+  visit_count INT NOT NULL DEFAULT 0,
+  last_diagnosis VARCHAR(255),
+  last_doctor_name VARCHAR(64),
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0
+);

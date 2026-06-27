@@ -1,0 +1,43 @@
+USE dmis_admin;
+
+CREATE TABLE IF NOT EXISTS sys_dict_type (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  dict_code VARCHAR(64) NOT NULL UNIQUE,
+  dict_name VARCHAR(128) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'ENABLED',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS sys_dict_item (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  dict_type_id BIGINT NOT NULL,
+  item_code VARCHAR(64) NOT NULL,
+  item_name VARCHAR(128) NOT NULL,
+  sort_no INT NOT NULL DEFAULT 0,
+  status VARCHAR(20) NOT NULL DEFAULT 'ENABLED',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by BIGINT NULL,
+  updated_by BIGINT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  version INT NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_dict_item (dict_type_id, item_code)
+);
+
+CREATE TABLE IF NOT EXISTS sys_operation_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  module_name VARCHAR(64) NOT NULL,
+  operation_type VARCHAR(64) NOT NULL,
+  operator_id BIGINT,
+  operator_name VARCHAR(64),
+  request_uri VARCHAR(255),
+  request_method VARCHAR(16),
+  operation_result VARCHAR(32),
+  operation_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_operation_time (operation_time)
+);
