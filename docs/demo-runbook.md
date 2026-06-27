@@ -8,6 +8,12 @@ This runbook maps the original project requirements to concrete demo steps.
 docker compose up -d mysql redis nacos
 ```
 
+Import Nacos config:
+
+```powershell
+.\scripts\import-nacos-config.ps1
+```
+
 Open Nacos:
 
 ```text
@@ -154,4 +160,18 @@ git status --short --branch
 git log --oneline --decorate -5
 git remote -v
 git push -u origin main
+```
+
+## 11. Scripted Verification
+
+Run all local verification gates:
+
+```powershell
+.\scripts\verify-milestone4.ps1
+```
+
+Run gateway smoke demo after services are started:
+
+```powershell
+.\scripts\demo-api.ps1
 ```

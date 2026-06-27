@@ -1,0 +1,74 @@
+@gateway = http://localhost:9527
+@token = paste-token-here
+
+### Login
+POST {{gateway}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### Protected API without token should return 401
+GET {{gateway}}/api/patients
+
+### Patient modules through gateway
+GET {{gateway}}/api/patients/modules
+Authorization: Bearer {{token}}
+
+### Patient Redis cache demo
+GET {{gateway}}/api/patients/1/cache-demo
+Authorization: Bearer {{token}}
+
+### Appointment remote patient demo
+GET {{gateway}}/api/appointments/demo/remote-patient/1
+Authorization: Bearer {{token}}
+
+### Config center demo
+GET {{gateway}}/api/config/patient/demo/config
+Authorization: Bearer {{token}}
+
+### Create patient
+POST {{gateway}}/api/patients
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Alice Chen",
+  "gender": "FEMALE",
+  "birthday": "1990-01-01",
+  "idCard": "110101199001010011",
+  "phone": "13800000001",
+  "address": "Beijing",
+  "bloodType": "A",
+  "allergyHistory": "Penicillin",
+  "medicalHistory": "Hypertension"
+}
+
+### Create drug
+POST {{gateway}}/api/pharmacy/drugs
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "drugCode": "D001",
+  "drugName": "Ibuprofen",
+  "specification": "0.2g",
+  "unit": "box",
+  "manufacturer": "DMIS Pharma",
+  "salePrice": 12.50,
+  "stockWarningLine": 10,
+  "status": "ENABLED"
+}
+
+### Create dictionary type
+POST {{gateway}}/api/admin/dict-types
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "dictCode": "gender",
+  "dictName": "Gender",
+  "status": "ENABLED"
+}

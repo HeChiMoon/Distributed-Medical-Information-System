@@ -21,6 +21,7 @@ A Spring Boot 3 + Spring Cloud + Vue 3 distributed medical information system de
 - Milestone 1: base distributed framework, gateway, auth, Nacos/Redis/MySQL infrastructure.
 - Milestone 2: core business services and 68 business APIs.
 - Milestone 3: integration demo layer, dynamic config endpoint, Redis cache demo endpoint, frontend demo console, runbook, and 76 documented APIs.
+- Milestone 4: final delivery package, verification scripts, API demo scripts, Nacos import script, acceptance matrix, and GitHub push demo.
 
 ## Local Startup
 
@@ -108,6 +109,19 @@ Use `docs/demo-runbook.md` to demonstrate:
 - Gateway access to business APIs.
 - Nacos config update through `/demo/config`.
 - Unit test results and Git push workflow.
+
+Final delivery documents:
+
+- `docs/milestone-4.md`
+- `docs/final-acceptance.md`
+- `docs/delivery-summary.md`
+- `docs/demo-api-samples.http`
+
+Final verification:
+
+```powershell
+.\scripts\verify-milestone4.ps1
+```
 
 ## Remote Repository
 

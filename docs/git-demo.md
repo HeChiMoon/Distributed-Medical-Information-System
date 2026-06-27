@@ -25,6 +25,7 @@ git log --oneline --decorate -5
 Current local milestone commits include:
 
 ```text
+cc8da61 feat(demo): complete milestone 3 integration showcase
 10d5902 feat(core): complete milestone 2 business services
 ```
 
