@@ -43,4 +43,14 @@ Push command:
 git push -u origin main
 ```
 
-If credentials are not available on the local machine, run the same command after signing in through Git Credential Manager or configuring a GitHub token.
+Local push attempts:
+
+```text
+git push -u origin main
+fatal: unable to access 'https://github.com/HeChiMoon/Distributed-Medical-Information-System.git/': schannel: failed to receive handshake, SSL/TLS connection failed
+
+git -c http.sslBackend=openssl push -u origin main
+fatal: unable to access 'https://github.com/HeChiMoon/Distributed-Medical-Information-System.git/': TLS connect error: error:0A000126:SSL routines::unexpected eof while reading
+```
+
+Conclusion: local commits are ready, but this machine could not complete the HTTPS TLS handshake to GitHub. Retry the same push command after the local network/Git SSL issue is resolved.

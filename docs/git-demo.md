@@ -38,6 +38,22 @@ git remote -v
 git push -u origin main
 ```
 
+Milestone 4 local push attempt result:
+
+```text
+git push -u origin main
+fatal: unable to access 'https://github.com/HeChiMoon/Distributed-Medical-Information-System.git/': schannel: failed to receive handshake, SSL/TLS connection failed
+
+git -c http.sslBackend=openssl push -u origin main
+fatal: unable to access 'https://github.com/HeChiMoon/Distributed-Medical-Information-System.git/': TLS connect error: error:0A000126:SSL routines::unexpected eof while reading
+```
+
+The repository is committed locally. After the TLS/network issue is fixed, run:
+
+```powershell
+git push -u origin main
+```
+
 If `origin` already exists:
 
 ```powershell
