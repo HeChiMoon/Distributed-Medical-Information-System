@@ -43,9 +43,9 @@ mvn test
 
 ## Next Slice
 
-Recommended next service after appointment: `medical-record-service`.
+Recommended next service after medical records: `pharmacy-service`.
 
-Reason: medical records depend on both patient profiles and appointment records, so it is the natural next step after patient and appointment flows.
+Reason: pharmacy dispensing naturally consumes active medical orders and verifies the medication workflow after diagnosis.
 
 ## Completed Slice: Appointment Service
 
@@ -81,3 +81,32 @@ Implemented capabilities:
 | GET | `/schedules/{id}` | Get schedule detail |
 | PUT | `/schedules/{id}` | Update schedule |
 | DELETE | `/schedules/{id}` | Delete schedule |
+
+## Completed Slice: Medical Record Service
+
+`medical-record-service` now supports outpatient medical records and medical orders.
+
+Implemented capabilities:
+
+- Create, page, detail, update, and delete medical records.
+- Create, page, detail, and stop medical orders.
+- Validate patient summary through Feign before creating a record.
+- Validate appointment ownership through Feign when a record references an appointment.
+- Copy patient and doctor ownership from record to order.
+- MySQL persistence through Spring Data JPA.
+- Service-level unit tests covering record creation, appointment mismatch rejection, order creation, and order stop.
+
+## Medical Record APIs
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | `/records/modules` | Medical record service capability metadata |
+| POST | `/records` | Create medical record |
+| GET | `/records` | Page medical records |
+| GET | `/records/{id}` | Get medical record detail |
+| PUT | `/records/{id}` | Update medical record |
+| DELETE | `/records/{id}` | Delete medical record |
+| POST | `/orders` | Create medical order |
+| GET | `/orders` | Page medical orders |
+| GET | `/orders/{id}` | Get medical order detail |
+| PUT | `/orders/{id}/stop` | Stop medical order |

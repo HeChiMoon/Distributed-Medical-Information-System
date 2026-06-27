@@ -1,0 +1,5 @@
+dmis:
+  record:
+    default-status: DRAFT
+  demo:
+    config-message: medical record service config from nacos

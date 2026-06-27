@@ -47,3 +47,11 @@ Phenomenon: Cancelling an appointment without releasing quota would make doctors
 Analysis: Appointment status and schedule `currentNumber` need to be updated together in one service transaction.
 
 Solution: `AppointmentService.cancel` marks the appointment as `CANCELLED`, decrements the schedule quota with a zero floor, and saves both records in one transactional method.
+
+## 7. Medical records need patient and appointment consistency
+
+Phenomenon: A medical record can reference both a patient and an appointment, but those two IDs may not belong together.
+
+Analysis: Creating a record from mismatched data would break later billing and pharmacy flows.
+
+Solution: `medical-record-service` calls `patient-service` to verify the patient and calls `appointment-service` to verify appointment ownership before saving the record.
